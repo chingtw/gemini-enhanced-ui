@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Gemini Sidebar Blur",
+  "version": "1.0",
+  "description": "將 Gemini 側邊欄的 My Stuff 區域進行模糊處理。",
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://gemini.google.com/*"],
+      "css": ["style.css"]
+    }
+  ]
+}
