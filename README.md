@@ -1,5 +1,7 @@
 # 🛡️ Gemini Sidebar NSFW Blur
 
+![Demo](https://drive.google.com/file/d/1FwShrujDYPGQKzZhIyJpfvMng10u7xUW/view?usp=sharing "Demo")
+
 這是一個專為 **Google Gemini** 網頁版設計的瀏覽器擴充功能（Chrome / Edge）。
 
 它能自動將側邊欄的 **My Stuff (我的內容)** 區域加上高質感的模糊濾鏡與 NSFW 警示遮罩，保護你的隱私，避免敏感對話標題直接暴露在螢幕上。
