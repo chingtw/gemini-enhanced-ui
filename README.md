@@ -1,6 +1,6 @@
 # 🛡️ Gemini Sidebar NSFW Blur
 
-![Demo](https://drive.google.com/uc?export=view&id=1FwShrujDYPGQKzZhIyJpfvMng10u7xUW "Demo")
+![Demo](https://drive.google.com/uc?export=view&id=16eDFY3igOma9daPzQH4jfAPmCzZ16moD "Demo")
 
 
 
