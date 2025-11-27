@@ -1,74 +1,89 @@
 /* =========================================
-   Gemini Sidebar NSFW Blur - V5 (圓角柔邊版)
-   功能：圓角適配、邊緣羽化(內陰影)、通用配色
+   Gemini Sidebar NSFW Blur - V6 (折疊收納版)
+   功能：預設折疊隱藏、懸停自動滑開、動畫過渡
    ========================================= */
 
-/* 1. 基礎容器 - 強制設定圓角 */
+/* 1. 基礎容器 - 折疊邏輯核心 */
 my-stuff-recents-preview {
     position: relative !important;
+    display: block !important;
     
-    /* 設定圓角，讓遮罩不會是直角的 */
-    border-radius: 12px !important; 
+    /* --- 關鍵：折疊設定 --- */
+    /* 設定一個固定的「收納高度」，只露出標題或圖示的高度 */
+    max-height: 50px !important; 
+    min-height: 50px !important;
     
-    /* 關鍵：隱藏溢出，確保圓角生效，且內容不跑出去 */
+    /* 隱藏超出的內容，這是折疊的關鍵 */
     overflow: hidden !important; 
     
+    /* 增加一點圓角和背景，讓它折疊時看起來像個按鈕 */
+    border-radius: 12px !important;
+    background-color: rgba(30, 30, 30, 0.3) !important; /* 模擬未展開時的底色 */
+    
+    /* --- 動畫過渡 --- */
+    /* max-height 的過渡時間設長一點，製造滑動感 */
+    transition: max-height 0.5s ease-in-out, background-color 0.3s !important;
+    
     isolation: isolate;
+    cursor: pointer;
 }
 
-/* 2. 覆蓋層 (NSFW 遮罩) */
-my-stuff-recents-preview::after {
-    /* --- 核心內容 --- */
-    content: "NSFW";
+/* 2. 懸停展開 (Hover to Expand) */
+my-stuff-recents-preview:hover {
+    /* --- 關鍵：展開設定 --- */
+    /* 設定一個足夠大的高度，讓內容可以完全顯示 */
+    /* 注意：CSS transition 不支援 height: auto，所以必須用 max-height */
+    max-height: 800px !important; 
     
-    /* --- 位置填滿 --- */
+    background-color: transparent !important; /* 展開後移除底色 */
+}
+
+/* 3. 覆蓋層 (NSFW 標籤) */
+my-stuff-recents-preview::after {
+    content: "NSFW (HOVER)"; /* 提示使用者只要滑過去就能看 */
+    
     position: absolute;
     inset: 0;
     z-index: 10;
     
-    /* --- 排版 --- */
+    /* 排版：確保折疊時，圖示和文字剛好在正中間 */
     display: flex;
+    flex-direction: row; /* 改成橫向排列，比較適合窄條 */
+    align-items: center;
     justify-content: center;
-    align-items: flex-end;
-    padding-bottom: 25px;
+    gap: 10px; /* 圖示與文字的間距 */
     
     /* --- 圖示 (Eye Slash) --- */
+    /* 使用 ::before 或背景圖都可以，這裡維持背景圖，但位置要調整 */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 512'%3E%3Cpath fill='%23ffffff' d='M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: center 35%;
-    background-size: 32px;
+    background-position: left 20px center; /* 圖示靠左 */
+    background-size: 24px;
+    
+    /* 為了不蓋住圖示，文字要往右推一點 */
+    padding-left: 50px; 
 
     /* --- 視覺效果 --- */
-    background-color: rgba(20, 20, 20, 0.5); /* 稍微調低不透明度，配合內陰影 */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(20, 20, 20, 0.85); /* 這裡顏色加深一點，因為它現在像個按鈕 */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     
-    /* ★ 關鍵新增：內陰影 (羽化邊緣) 
-       inset: 內部陰影
-       0 0: X Y 軸偏移 (不偏移)
-       20px: 模糊半徑 (羽化範圍)
-       rgba(0,0,0,0.8): 顏色 (邊緣比較深，創造邊界模糊感)
-    */
-    box-shadow: inset 0 0 20px 2px rgba(0, 0, 0, 0.5);
-
-    /* 繼承父元素的圓角，確保形狀一致 */
-    border-radius: inherit; 
-
+    /* 內陰影 */
+    box-shadow: inset 0 0 10px 1px rgba(0, 0, 0, 0.5);
+    
     color: #ffffff;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 14px;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     font-family: 'Google Sans', sans-serif;
     
-    /* --- 互動 --- */
-    cursor: pointer;
-    transition: opacity 0.3s ease, transform 0.3s ease; /* 增加 transform 過渡 */
+    /* --- 消失動畫 --- */
+    transition: opacity 0.3s ease, visibility 0.3s;
 }
 
-/* 3. Hover 效果 */
+/* 4. 當展開時，隱藏標籤文字 */
 my-stuff-recents-preview:hover::after {
     opacity: 0;
+    visibility: hidden; /* 確保隱藏後不會擋到下面的點擊 */
     pointer-events: none;
-    /* 移除時稍微放大一點，讓淡出更自然 */
-    transform: scale(1.05); 
 }
