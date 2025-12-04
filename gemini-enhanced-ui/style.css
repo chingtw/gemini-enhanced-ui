@@ -365,7 +365,7 @@ body.nsfw-disabled library-item-card::before {
 
 /* 1. 鎖定目標圖片 (預設狀態：縮小、裁切、模糊) */
 img.preview-image,
-single-image img {
+generated-image {
     /* 強制縮小成正方形 */
     width: 100px !important;
     height: 100px !important;
@@ -394,7 +394,7 @@ single-image img {
 /* 當滑鼠移到上傳預覽圖上 */
 img.preview-image:hover,
 /* 當滑鼠移到生成圖片區塊上 */
-single-image:hover img {
+generated-image:hover {
     /* 還原尺寸：這會讓圖片彈回原本的大小 */
     width: auto !important;  
     height: auto !important;
@@ -422,7 +422,7 @@ single-image:hover img {
    ========================================= */
 
 body.nsfw-disabled img.preview-image,
-body.nsfw-disabled single-image img {
+body.nsfw-disabled generated-image {
     /* 強制還原所有屬性，就像擴充功能不存在一樣 */
     width: auto !important;
     height: auto !important;
