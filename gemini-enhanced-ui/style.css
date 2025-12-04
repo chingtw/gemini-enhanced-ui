@@ -1,7 +1,6 @@
 /* =========================================
-   Gemini NSFW Blur - V11 (嚴格點擊防護版)
+   Gemini NSFW Blur
    功能：側邊欄折疊、嚴格限制 5 秒後才能點擊
-   修正：移除 pointer-events 導致的瞬間穿透 bug
    ========================================= */
 
 /* -------------------------------------------------------
@@ -100,7 +99,6 @@ library-item-card:hover::before {
 
 /* -------------------------------------------------------
    區塊 E: 共用元件 - NSFW 遮罩 (::after)
-   重要修正：利用 visibility 控制點擊穿透
    ------------------------------------------------------- */
 my-stuff-recents-preview::after,
 library-item-card::after {
@@ -358,4 +356,82 @@ body.nsfw-disabled library-item-card::before {
 
 .gemini-nsfw-status-icon.off {
     color: var(--md-sys-color-on-surface-variant, #888);
+}
+
+/* =========================================
+   Gemini Chat Content Blur 
+   範圍：針對 .preview-image (上傳) 與 single-image (生成)
+   ========================================= */
+
+/* 1. 鎖定目標圖片 (預設狀態：縮小、裁切、模糊) */
+img.preview-image,
+single-image img {
+    /* 強制縮小成正方形 */
+    width: 100px !important;
+    height: 100px !important;
+    
+    /* 關鍵：裁切圖片中央，保持正方形不變形 */
+    object-fit: cover !important;
+    
+    /* 模糊與透明度 */
+    filter: blur(20px) !important;
+    opacity: 0.7; /* 稍微變暗，增加遮蔽感 */
+    
+    /* 外觀修飾 */
+    border-radius: 16px !important; /* 圓角方塊 */
+    margin: 8px 0 !important;       /* 留點空隙 */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    
+    /* 動畫設定 (注意：width/height 到 auto 的動畫在舊瀏覽器可能會有頓挫感，但在這裡是必要的) */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    
+    /* 游標變成「放大鏡」，提示可以展開 */
+    cursor: zoom-in;
+}
+
+/* 2. 懸停解鎖 (Hover Effects：展開、清晰) */
+
+/* 當滑鼠移到上傳預覽圖上 */
+img.preview-image:hover,
+/* 當滑鼠移到生成圖片區塊上 */
+single-image:hover img {
+    /* 還原尺寸：這會讓圖片彈回原本的大小 */
+    width: auto !important;  
+    height: auto !important;
+    max-width: 100% !important; /* 確保不超出螢幕 */
+    
+    /* 還原顯示方式：顯示整張圖 */
+    object-fit: contain !important;
+    
+    /* 移除模糊與透明 */
+    filter: blur(0) !important;
+    opacity: 1;
+    
+    /* 調整圓角與陰影 */
+    border-radius: 8px !important;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    
+    /* 游標還原 */
+    cursor: default;
+}
+
+
+/* =========================================
+   全域開關連動 (NSFW Switch Integration)
+   功能：當 NSFW 開關關閉 (body 有 nsfw-disabled) 時，完全還原
+   ========================================= */
+
+body.nsfw-disabled img.preview-image,
+body.nsfw-disabled single-image img {
+    /* 強制還原所有屬性，就像擴充功能不存在一樣 */
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    object-fit: initial !important;
+    filter: none !important;
+    opacity: 1 !important;
+    margin: 0 !important;
+    border-radius: 12px !important; /* 維持 Gemini 原本的圓角 */
+    cursor: default !important;
+    transition: none !important;
 }
